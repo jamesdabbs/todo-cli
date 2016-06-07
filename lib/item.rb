@@ -8,4 +8,13 @@ class Item < ActiveRecord::Base
       errors.add :due_date, "can't be in the past"
     end
   end
+
+  def done?
+    done_at.present?
+  end
+
+  def mark_complete
+    # WARNING: not `done_at = Time.now`
+    self.done_at = Time.now
+  end
 end
