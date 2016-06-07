@@ -16,5 +16,6 @@ class Item < ActiveRecord::Base
   def mark_complete
     # WARNING: not `done_at = Time.now`
     self.done_at = Time.now
+    save!
   end
 end
