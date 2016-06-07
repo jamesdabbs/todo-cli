@@ -11,4 +11,5 @@ class List < ActiveRecord::Base
   #   @user ||= User.find(user_id)
   # end
   belongs_to :user
+  has_many :items
 end
