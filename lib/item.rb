@@ -22,4 +22,11 @@ class Item < ActiveRecord::Base
     self.done_at = Time.now
     save!
   end
+
+  def add_tag tag_name
+    tag = Tag.where(name: tag_name).first_or_create!
+    # ItemTag.create! item_id: self.id, category_id: tag.id
+    # ItemTag.create! item: self, category: tag
+    tags.push tag
+  end
 end
