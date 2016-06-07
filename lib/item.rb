@@ -4,6 +4,8 @@ class Item < ActiveRecord::Base
   validate :due_date_is_in_the_future
 
   belongs_to :list
+  has_many :item_tags
+  has_many :tags, through: :item_tags
 
   def due_date_is_in_the_future
     if due_date.present? && due_date < Date.today
