@@ -16,8 +16,7 @@ class TodoApp < Sinatra::Base
 
   get "/lists" do
     lists = user.lists
-    resp = { lists: user.lists.pluck(:title) }
-    json resp
+    json lists: user.lists.pluck(:title)
   end
 
   # get "/lists/:name"
