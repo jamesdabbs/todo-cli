@@ -30,9 +30,9 @@ when "show"
   end
   list.items.each do |item|
     if item.due_date
-      puts "* #{item.name} [#{item.due_date}]"
+      puts "#{item.id.to_s.rjust 4}) #{item.name} [#{item.due_date}]"
     else
-      puts "* #{item.name}"
+      puts "#{item.id.to_s.rjust 4}) #{item.name}"
     end
   end
 
@@ -41,6 +41,19 @@ when "add"
   list = user.lists.where(title: name).first
   item_name = ARGV.join " "
   list.add_item item_name
+
+when "complete"
+  item = Item.find_by id: ARGV.first
+  if item.nil?
+    puts "Can't find that item!"
+    exit 1
+  elsif user != item.user
+    puts "That's not your item!"
+    exit 1
+  end
+  item.mark_complete
+  puts "`#{item.name}` is now complete"
+
 else
   puts "I don't know how to `#{command}`"
 end
