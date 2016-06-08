@@ -10,9 +10,12 @@ class TodoApp < Sinatra::Base
   set :show_exceptions, false
 
   error do |e|
-    #binding.pry
-    # raise e
-    puts e.message
+    if e.is_a? ActiveRecord::RecordNotFound
+      halt 404
+    else
+      # raise e
+      puts e.message
+    end
   end
 
   get "/lists" do
@@ -27,12 +30,16 @@ class TodoApp < Sinatra::Base
 
   post "/lists/:name" do
     list = user.lists.where(title: params[:name]).first
-    list.add_item body["name"], due_date: body["due_date"]
+    list.add_item parsed_body["name"], due_date: parsed_body["due_date"]
 
     status 200
   end
 
-  # delete "/items/:id"
+  delete "/items/:id" do
+    item = user.items.find params[:id]
+    item.mark_complete
+    status 200
+  end
 
   def user
     username = request.env["HTTP_AUTHORIZATION"]
@@ -44,9 +51,9 @@ class TodoApp < Sinatra::Base
     end
   end
 
-  def body
+  def parsed_body
     begin
-      @body ||= JSON.parse request.body.read
+      @parsed_body ||= JSON.parse request.body.read
     rescue
       # FIXME
       halt 400
