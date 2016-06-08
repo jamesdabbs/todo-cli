@@ -36,6 +36,11 @@ when "show"
     end
   end
 
+when "add"
+  name = ARGV.shift
+  list = user.lists.where(title: name).first
+  item_name = ARGV.join " "
+  list.add_item item_name
 else
   puts "I don't know how to `#{command}`"
 end
