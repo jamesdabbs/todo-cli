@@ -12,6 +12,9 @@ class TodoApp < Sinatra::Base
   error do |e|
     if e.is_a? ActiveRecord::RecordNotFound
       halt 404
+    elsif e.is_a? ActiveRecord::RecordInvalid
+      # FIXME: why is this 500'ing _after_ sending the JSON response?
+      json error: e.message
     else
       # raise e
       puts e.message
