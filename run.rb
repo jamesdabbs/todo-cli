@@ -1,7 +1,7 @@
 require "pry"
 require "./db/setup"
 require "./lib/all"
-
+#
 command = ARGV.shift
 username = `git config user.name`.chomp
 user = User.where(username: username).first_or_create!

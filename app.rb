@@ -11,7 +11,8 @@ class TodoApp < Sinatra::Base
 
   error do |e|
     #binding.pry
-    raise e
+    # raise e
+    puts e.message
   end
 
   get "/lists" do
@@ -19,8 +20,11 @@ class TodoApp < Sinatra::Base
     json lists: user.lists.pluck(:title)
   end
 
-  # get "/lists/:name"
-  #
+  get "/lists/:name" do
+    list = user.lists.where(title: params[:name]).first
+    json items: list.items
+  end
+
   # post "/lists/:name"
   #
   # delete "/items/:id"

@@ -29,4 +29,13 @@ class Item < ActiveRecord::Base
     # ItemTag.create! item: self, category: tag
     tags.push tag
   end
+
+  def as_json *_
+    {
+      id:       id,
+      name:     name,
+      due_date: due_date,
+      done:     done?
+    }
+  end
 end
