@@ -25,8 +25,13 @@ class TodoApp < Sinatra::Base
     json items: list.items
   end
 
-  # post "/lists/:name"
-  #
+  post "/lists/:name" do
+    list = user.lists.where(title: params[:name]).first
+    list.add_item body["name"], due_date: body["due_date"]
+
+    status 200
+  end
+
   # delete "/items/:id"
 
   def user
@@ -36,6 +41,15 @@ class TodoApp < Sinatra::Base
       User.where(username: username).first_or_create!
     else
       halt 401
+    end
+  end
+
+  def body
+    begin
+      @body ||= JSON.parse request.body.read
+    rescue
+      # FIXME
+      halt 400
     end
   end
 end
