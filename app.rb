@@ -44,6 +44,14 @@ class TodoApp < Sinatra::Base
     status 200
   end
 
+  get "/message/:text" do
+    params[:text].reverse
+  end
+
+  post "/lists" do
+    user.make_list params[:title]
+  end
+
   def user
     username = request.env["HTTP_AUTHORIZATION"]
     if username
@@ -64,4 +72,6 @@ class TodoApp < Sinatra::Base
   end
 end
 
-TodoApp.run!
+if $PROGRAM_NAME == __FILE__
+  TodoApp.run!
+end
