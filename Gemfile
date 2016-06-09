@@ -1,7 +1,9 @@
 source 'https://rubygems.org'
+ruby '2.3.1'
 
 gem 'activerecord'
 gem 'pry'
+gem 'rake'
 gem 'sinatra', require: false
 gem 'sinatra-contrib'
 
