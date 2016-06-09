@@ -6,6 +6,7 @@ gem 'pry'
 gem 'rake'
 gem 'sinatra', require: false
 gem 'sinatra-contrib'
+gem 'rack-cors', require: 'rack/cors'
 
 group :development do
   gem 'sqlite3'
