@@ -11,10 +11,9 @@ class TodoApp < Sinatra::Base
 
   error do |e|
     if e.is_a? ActiveRecord::RecordNotFound
-      halt 404
+      halt 404, json(error: "Not Found")
     elsif e.is_a? ActiveRecord::RecordInvalid
-      # FIXME: why is this 500'ing _after_ sending the JSON response?
-      json error: e.message
+      halt 422, json(error: e.message)
     else
       # raise e
       puts e.message
@@ -22,7 +21,6 @@ class TodoApp < Sinatra::Base
   end
 
   get "/lists" do
-    lists = user.lists
     json lists: user.lists.pluck(:title)
   end
 
@@ -32,6 +30,7 @@ class TodoApp < Sinatra::Base
   end
 
   post "/lists/:name" do
+    List.create!
     list = user.lists.where(title: params[:name]).first
     list.add_item parsed_body["name"], due_date: parsed_body["due_date"]
 
@@ -54,19 +53,14 @@ class TodoApp < Sinatra::Base
 
   def user
     username = request.env["HTTP_AUTHORIZATION"]
-    if username
-      # FIXME: what if this is a new user? We don't have a password
-      User.where(username: username).first_or_create!
-    else
-      halt 401
-    end
+    halt 401 unless username
+    User.find_by(username: username) || halt(403)
   end
 
   def parsed_body
     begin
       @parsed_body ||= JSON.parse request.body.read
-    rescue
-      # FIXME
+    rescue JSON::ParserError
       halt 400
     end
   end
