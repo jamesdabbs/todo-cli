@@ -1,3 +1,6 @@
+# Load the app in "test" mode (meaning: connect to the test database)
+ENV["TEST"] = "true"
+
 require 'pry'
 require 'minitest/autorun'
 require 'minitest/focus'
